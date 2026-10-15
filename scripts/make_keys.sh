@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 SUBJECT="/C=GB/ST=Fife/L=Dunfermline/O=cawilliamson/OU=cawilliamson/CN=cawilliamson/emailAddress=contact@chrisaw.io"
 
 CERTS=(
@@ -77,18 +78,20 @@ CERTS=(
     "com.android.wifi.resources"
 )
 
-# Copy make_key tool locally and patch it to use 4096-bit keys
-echo "Copying make_key tool locally..."
-cp /repo/src/development/tools/make_key ./make_key
-echo "Patching make_key to use 4096-bit keys..."
-sed -i 's|2048|4096|g' ./make_key
+pushd "${SCRIPT_DIR}/../../cawilliamson_keys/"
+    # Copy make_key tool locally and patch it to use 4096-bit keys
+    echo "Copying make_key tool locally..."
+    cp /repo/src/development/tools/make_key ./make_key
+    echo "Patching make_key to use 4096-bit keys..."
+    sed -i 's|2048|4096|g' ./make_key
 
-# Generate certs
-for cert in "${CERTS[@]}"; do
-    echo "Generating $cert certificate.."
-    echo "" | ./make_key "$cert" "$SUBJECT"
-    openssl pkcs8 -in "${cert}.pk8" -inform DER -nocrypt -out "${cert}.pem"
-done
+    # Generate certs
+    for cert in "${CERTS[@]}"; do
+        echo "Generating $cert certificate.."
+        echo "" | ./make_key "$cert" "$SUBJECT"
+        openssl pkcs8 -in "${cert}.pk8" -inform DER -nocrypt -out "${cert}.pem"
+    done
+popd
 
 # Remove patched binary
 rm -f make_key
