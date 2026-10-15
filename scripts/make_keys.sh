@@ -1,7 +1,10 @@
 #!/bin/bash
 
-SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 SUBJECT="/C=GB/ST=Fife/L=Dunfermline/O=cawilliamson/OU=cawilliamson/CN=cawilliamson/emailAddress=contact@chrisaw.io"
+
+# determine relevant paths
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+KEYS_DIR=$(cd -- "${SCRIPT_DIR}/../../cawilliamson_keys" &> /dev/null && pwd)
 
 CERTS=(
     # essential keys
@@ -78,7 +81,7 @@ CERTS=(
     "com.android.wifi.resources"
 )
 
-pushd "${SCRIPT_DIR}/../../cawilliamson_keys/"
+pushd "${KEYS_DIR}"
     # Copy make_key tool locally and patch it to use 4096-bit keys
     echo "Copying make_key tool locally..."
     cp /repo/src/development/tools/make_key ./make_key
