@@ -2,7 +2,7 @@
 
 # determine relevant paths
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-KEYS_DIR=$(cd -- "${KEYS_DIR}/../../cawilliamson_keys" &> /dev/null && pwd)
+KEYS_DIR=$(cd -- "${SCRIPT_DIR}/../../cawilliamson_keys" &> /dev/null && pwd)
 
 sign_target_files_apks -o -d "${KEYS_DIR}" \
     --extra_apks AdServicesApk.apk="${KEYS_DIR}"/releasekey \
